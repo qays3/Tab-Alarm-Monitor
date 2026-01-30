@@ -1,0 +1,31 @@
+{
+  "manifest_version": 2,
+  "name": "Tab Alarm Monitor",
+  "version": "1.0.1",
+  "description": "Monitor tabs with custom alarms",
+  "permissions": [
+    "storage",
+    "tabs",
+    "alarms",
+    "notifications",
+    "<all_urls>"
+  ],
+  "background": {
+    "scripts": ["assets/js/background.js"],
+    "persistent": true
+  },
+  "browser_action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "assets/icons/icon.png",
+      "48": "assets/icons/icon.png",
+      "128": "assets/icons/icon.png"
+    }
+  },
+  "icons": {
+    "16": "assets/icons/icon.png",
+    "48": "assets/icons/icon.png",
+    "128": "assets/icons/icon.png"
+  },
+  "web_accessible_resources": ["assets/sounds/alarm.mp3"]
+}

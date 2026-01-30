@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tab Alarm Monitor</title>
+  <link rel="stylesheet" href="assets/css/root.css">
+  <link rel="stylesheet" href="assets/css/popup.css">
+</head>
+<body>
+  <div class="header">
+    <div class="header-top">
+      <h1>Tab Alarm Monitor</h1>
+      <button id="muteToggle" class="mute-btn" title="Toggle sound">
+        <svg class="sound-on" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M11 5L6 9H2V15H6L11 19V5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M15.54 8.46C16.4774 9.39764 17.0039 10.6692 17.0039 11.995C17.0039 13.3208 16.4774 14.5924 15.54 15.53" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M19.07 4.93C20.9447 6.80528 21.9979 9.34836 21.9979 12C21.9979 14.6516 20.9447 17.1947 19.07 19.07" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <svg class="sound-off" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:none;">
+          <path d="M11 5L6 9H2V15H6L11 19V5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <line x1="23" y1="9" x2="17" y2="15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <line x1="17" y1="9" x2="23" y2="15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+    <div class="add-tab-form">
+      <div class="form-row">
+        <input type="number" id="intervalInput" placeholder="Interval" min="1" value="5">
+        <select id="unitSelect">
+          <option value="seconds">Seconds</option>
+          <option value="minutes" selected>Minutes</option>
+          <option value="hours">Hours</option>
+          <option value="days">Days</option>
+        </select>
+        <button id="addCurrentTab" class="btn-primary">Add Current Tab</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="tabs-list" id="tabsList">
+    <div class="empty-state">No tabs monitored yet. Add current tab to start monitoring.</div>
+  </div>
+
+  <div class="footer">
+    <span>Developed by <a href="https://qayssarayra.com/" target="_blank" rel="noopener noreferrer">Qays Sarayra</a></span>
+  </div>
+
+  <script src="assets/js/storage.js"></script>
+  <script src="assets/js/popup.js"></script>
+</body>
+</html>
