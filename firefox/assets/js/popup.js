@@ -48,50 +48,118 @@ document.addEventListener('DOMContentLoaded', async () => {
     return parts.join(' ') + ' ago';
   }
 
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  function createTabElement(tabId, tab) {
+    const isAlert = tab.status === 'alert';
+    const statusClass = isAlert ? 'alert' : 'safe';
+    const alarmCount = tab.alarmCount || 0;
+    
+    const now = Date.now();
+    const elapsed = Math.floor((now - tab.lastVisit) / 1000);
+    const timeStr = formatTimeAgo(elapsed);
+
+    const tabItem = document.createElement('div');
+    tabItem.className = `tab-item ${statusClass}`;
+    tabItem.setAttribute('data-tab-id', tabId);
+
+    // Header
+    const header = document.createElement('div');
+    header.className = 'tab-header';
+
+    const title = document.createElement('div');
+    title.className = 'tab-title';
+    title.textContent = tab.title;
+
+    const actions = document.createElement('div');
+    actions.className = 'tab-actions';
+
+    const visitBtn = document.createElement('button');
+    visitBtn.className = 'btn-success visit-btn';
+    visitBtn.setAttribute('data-tab-id', tabId);
+    visitBtn.textContent = 'Visit';
+
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'btn-danger remove-btn';
+    removeBtn.setAttribute('data-tab-id', tabId);
+    removeBtn.textContent = 'Remove';
+
+    actions.appendChild(visitBtn);
+    actions.appendChild(removeBtn);
+    header.appendChild(title);
+    header.appendChild(actions);
+
+    // URL
+    const urlDiv = document.createElement('div');
+    urlDiv.className = 'tab-url';
+    urlDiv.textContent = tab.url;
+
+    // Info
+    const info = document.createElement('div');
+    info.className = 'tab-info';
+
+    const interval = document.createElement('span');
+    interval.className = 'tab-interval';
+    interval.textContent = `Every ${tab.interval} ${tab.unit}`;
+
+    const status = document.createElement('div');
+    status.className = 'tab-status';
+
+    const dot = document.createElement('span');
+    dot.className = `status-dot ${statusClass}`;
+
+    const lastVisit = document.createElement('span');
+    lastVisit.textContent = `Last visit: ${timeStr}`;
+
+    status.appendChild(dot);
+    status.appendChild(lastVisit);
+    info.appendChild(interval);
+    info.appendChild(status);
+
+    // Assemble
+    tabItem.appendChild(header);
+    tabItem.appendChild(urlDiv);
+    tabItem.appendChild(info);
+
+    // Alarm counter
+    if (alarmCount > 0) {
+      const counter = document.createElement('div');
+      counter.className = 'alarm-counter';
+      counter.textContent = `🔔 ${alarmCount} alarm${alarmCount > 1 ? 's' : ''} missed`;
+      tabItem.appendChild(counter);
+    }
+
+    return tabItem;
+  }
+
   async function renderTabs() {
     const tabs = await Storage.getAll();
     const tabIds = Object.keys(tabs);
 
+    // Clear existing content
+    while (tabsList.firstChild) {
+      tabsList.removeChild(tabsList.firstChild);
+    }
+
     if (tabIds.length === 0) {
-      tabsList.innerHTML = '<div class="empty-state">No tabs monitored yet. Add current tab to start monitoring.</div>';
+      const emptyState = document.createElement('div');
+      emptyState.className = 'empty-state';
+      emptyState.textContent = 'No tabs monitored yet. Add current tab to start monitoring.';
+      tabsList.appendChild(emptyState);
       return;
     }
 
-    let html = '';
     for (const tabId of tabIds) {
       const tab = tabs[tabId];
-      const isAlert = tab.status === 'alert';
-      const statusClass = isAlert ? 'alert' : 'safe';
-      const alarmCount = tab.alarmCount || 0;
-      
-      const now = Date.now();
-      const elapsed = Math.floor((now - tab.lastVisit) / 1000);
-      const timeStr = formatTimeAgo(elapsed);
-
-      html += `
-        <div class="tab-item ${statusClass}" data-tab-id="${tabId}">
-          <div class="tab-header">
-            <div class="tab-title">${tab.title}</div>
-            <div class="tab-actions">
-              <button class="btn-success visit-btn" data-tab-id="${tabId}">Visit</button>
-              <button class="btn-danger remove-btn" data-tab-id="${tabId}">Remove</button>
-            </div>
-          </div>
-          <div class="tab-url">${tab.url}</div>
-          <div class="tab-info">
-            <span class="tab-interval">Every ${tab.interval} ${tab.unit}</span>
-            <div class="tab-status">
-              <span class="status-dot ${statusClass}"></span>
-              <span>Last visit: ${timeStr}</span>
-            </div>
-          </div>
-          ${alarmCount > 0 ? `<div class="alarm-counter">🔔 ${alarmCount} alarm${alarmCount > 1 ? 's' : ''} missed</div>` : ''}
-        </div>
-      `;
+      const tabElement = createTabElement(tabId, tab);
+      tabsList.appendChild(tabElement);
     }
 
-    tabsList.innerHTML = html;
-
+    // Add event listeners
     document.querySelectorAll('.remove-btn').forEach(btn => {
       btn.addEventListener('click', async (e) => {
         const tabId = e.target.dataset.tabId;

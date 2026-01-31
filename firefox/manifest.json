@@ -1,8 +1,17 @@
 {
   "manifest_version": 2,
   "name": "Tab Alarm Monitor",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Monitor tabs with custom alarms",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "tab-alarm-monitor@qayssarayra.com",
+      "strict_min_version": "140.0",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
+    }
+  },
   "permissions": [
     "storage",
     "tabs",
@@ -17,15 +26,15 @@
   "browser_action": {
     "default_popup": "popup.html",
     "default_icon": {
-      "16": "assets/icons/icon.png",
-      "48": "assets/icons/icon.png",
-      "128": "assets/icons/icon.png"
+      "16": "assets/icons/icon-16.png",
+      "48": "assets/icons/icon-48.png",
+      "128": "assets/icons/icon-128.png"
     }
   },
   "icons": {
-    "16": "assets/icons/icon.png",
-    "48": "assets/icons/icon.png",
-    "128": "assets/icons/icon.png"
+    "16": "assets/icons/icon-16.png",
+    "48": "assets/icons/icon-48.png",
+    "128": "assets/icons/icon-128.png"
   },
   "web_accessible_resources": ["assets/sounds/alarm.mp3"]
 }
